@@ -45,6 +45,11 @@
             android:label="@string/title_activity_drawer_main"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <provider
+            android:name=".database.TemplateContentProvider"
+            android:authorities="ro.basilescu.bogdan.templateapplication.database"
+            android:exported="false"/>
     </application>
 
 </manifest>
