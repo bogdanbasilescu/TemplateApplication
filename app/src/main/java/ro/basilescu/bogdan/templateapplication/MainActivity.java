@@ -64,14 +64,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportActionBar().setDisplayUseLogoEnabled(true);
 
         // Set up RecyclerView
-        RecyclerView mMovieRecyclerView = (RecyclerView) findViewById(R.id.movie_recycler_view);
+        RecyclerView mTodoRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mMovieRecyclerView.setLayoutManager(linearLayoutManager);
+        mTodoRecyclerView.setLayoutManager(linearLayoutManager);
 
         // Set up adapter for RecyclerView
         mTodoAdapter = new TodoAdapter(this);
-        mMovieRecyclerView.setAdapter(mTodoAdapter);
+        mTodoRecyclerView.setAdapter(mTodoAdapter);
 
     }
 

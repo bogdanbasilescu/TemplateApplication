@@ -51,4 +51,10 @@
     <string name="todo_edit_summary">Summary</string>
     <string name="todo_edit_description">Description</string>
     <string name="todo_edit_confirm">Confirm</string>
+
+    <!-- Tab titles for SwipeMainActivity -->
+    <string name="tab1_title">SQLite</string>
+    <string name="tab2_title">Firebase</string>
+    <string name="tab3_title">Retrofit</string>
+
 </resources>

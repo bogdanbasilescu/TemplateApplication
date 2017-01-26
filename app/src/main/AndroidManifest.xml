@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".SwipeMainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -19,17 +19,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- Uncomment if you want to use the old MainActivity and change the main launcher activity -->
+        <!--<activity-->
+            <!--android:name=".MainActivity"-->
+            <!--android:label="@string/title_activity_swipe_main"-->
+            <!--android:theme="@style/AppTheme.NoActionBar">-->
+        <!--</activity>-->
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".ResetPasswordActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".SwipeMainActivity"
-            android:label="@string/title_activity_swipe_main"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
