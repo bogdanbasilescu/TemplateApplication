@@ -1,4 +1,4 @@
-package ro.basilescu.bogdan.templateapplication;
+package ro.basilescu.bogdan.templateapplication.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ro.basilescu.bogdan.templateapplication.R;
 import ro.basilescu.bogdan.templateapplication.adapters.TodoAdapter;
 import ro.basilescu.bogdan.templateapplication.database.TodoContract;
 

@@ -1,4 +1,4 @@
-package ro.basilescu.bogdan.templateapplication;
+package ro.basilescu.bogdan.templateapplication.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import ro.basilescu.bogdan.templateapplication.R;
 import ro.basilescu.bogdan.templateapplication.adapters.TabAdapter;
 import ro.basilescu.bogdan.templateapplication.fragments.FirebaseFragment;
 import ro.basilescu.bogdan.templateapplication.fragments.RetrofitFragment;
