@@ -21,7 +21,7 @@ public class TodoAdapter extends RecyclerViewCursorAdapter<TodoAdapter.TodoViewH
      */
     public TodoAdapter(Context context) {
         super(context);
-        setupCursorAdapter(null, 0, R.layout.list_item_todo, false);
+        setupCursorAdapter(null, 0, R.layout.item_todo, false);
     }
 
     /**
