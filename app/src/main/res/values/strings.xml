@@ -21,7 +21,9 @@
     <string name="hint_name">Fullname</string>
     <string name="btn_login">LOGIN</string>
     <string name="btn_link_to_register">Not a member? Get registered in Firebase now!</string>
-    <string name="btn_link_to_login">Already registered. Login Me!</string>
+    <string name="btn_register_social_app">Get started</string>
+    <string name="btn_register_sign_up_form">Register</string>
+    <string name="btn_link_to_login">Already have an account? Login</string>
     <string name="title_activity_reset_password">ResetPasswordActivity</string>
     <string name="btn_forgot_password">Forgot your password?</string>
     <string name="btn_reset_password">Reset Password</string>
@@ -57,5 +59,11 @@
     <string name="tab1_title">SQLite</string>
     <string name="tab2_title">Firebase</string>
     <string name="tab3_title">Retrofit</string>
+
+    <!-- Layout helpers -->
+
+    <string name="Lorem_ipsum_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.Nam cursus felis at tortor efficitur faucibus.
+        Mauris facilisis eu sem vitae feugiat. Aenean est ipsum, fringilla ut ante vel, eleifend tincidunt leo. Sed eget convallis diam, ut pretium lectus.
+        Aliquam eu mi id lectus ullamcorper scelerisque a quis massa. Nam massa lectus, tempor sed hendrerit fringilla, posuere lobortis tortor. "</string>
 
 </resources>

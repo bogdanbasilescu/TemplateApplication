@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#03A9F4</color>
-    <color name="colorPrimaryDark">#0288D1</color>
-    <color name="colorAccent">#FFC107</color>
+    <color name="colorPrimary">#36465d</color>
+    <color name="colorPrimaryDark">#2b384a</color>
+    <color name="colorAccent">#529ecc</color>
 
     <!-- Material Design Color Palette -->
     <color name="primaryText">#212121</color>
@@ -10,6 +10,8 @@
     <color name="colorLightPrimary">#B3E5FC</color>
     <color name="colorTextIcons">#FFFFFF</color>
     <color name="dividerColor">#BDBDBD</color>
+
+    <color name="btn_color_accent_transparent">#07FFFFFF</color>
 
     <!-- Firebase example values -->
     <color name="bg_login">#26ae90</color>

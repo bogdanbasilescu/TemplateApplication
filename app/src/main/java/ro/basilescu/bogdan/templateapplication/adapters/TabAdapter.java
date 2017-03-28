@@ -152,8 +152,8 @@ public class TabAdapter extends FragmentPagerAdapter implements ViewPager.OnPage
                 icon.setColorFilter(selected ? selectedColor : unselectedColor);
             }
         }
-        // Set activity title when selecting tab
-        mActivityTitle.setText(Tab.values()[position].titleResource);
+//        // Set activity title when selecting tab
+//        mActivityTitle.setText(Tab.values()[position].titleResource);
     }
 
     @Override
