@@ -1,10 +1,13 @@
 package ro.basilescu.bogdan.templateapplication.fragments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,18 +16,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import ro.basilescu.bogdan.templateapplication.R;
 import ro.basilescu.bogdan.templateapplication.TemplateApplication;
 import ro.basilescu.bogdan.templateapplication.adapters.decorators.DividerItemDecoration;
-import ro.basilescu.bogdan.templateapplication.rest.MovieApiInterface;
+import ro.basilescu.bogdan.templateapplication.rest.FileClient;
 import ro.basilescu.bogdan.templateapplication.rest.MovieApiClient;
+import ro.basilescu.bogdan.templateapplication.rest.MovieApiInterface;
 import ro.basilescu.bogdan.templateapplication.restmodel.Movie;
 import ro.basilescu.bogdan.templateapplication.restmodel.MovieResponse;
+import ro.basilescu.bogdan.templateapplication.utils.FileUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -160,6 +180,253 @@ public class RetrofitFragment extends Fragment {
     public interface OnFragmentRetrofitListener {
         // TODO: Update argument type and name
         void onFragmentRetrofitInteraction(String retrofitEvent);
+    }
+
+    @NonNull
+    private RequestBody createPartFromString(String descriptionString) {
+        return RequestBody.create(MultipartBody.FORM, descriptionString);
+    }
+
+    @NonNull
+    private MultipartBody.Part prepareFilePart(String partName, Uri fileUri) {
+        // https://github.com/iPaulPro/aFileChooser/blob/master/aFileChooser/src/com/ipaulpro/afilechooser/utils/FileUtils.java
+        // use the FileUtils to get the actual file by uri
+        File file = FileUtils.getFile(getActivity(), fileUri);
+
+        // create RequestBody instance from file
+        RequestBody requestFile = RequestBody.create(
+                MediaType.parse(getActivity().getContentResolver().getType(fileUri)),
+                file);
+
+        // MultipartBody.Part is used to send also the actual file name
+        return MultipartBody.Part.createFormData(partName, file.getName(), requestFile);
+    }
+
+    private void uploadFile(Uri fileUri) {
+        String name = "Name";
+        RequestBody descriptionPart = RequestBody.create(MultipartBody.FORM, name);
+
+        RequestBody filePart = RequestBody.create(MediaType.parse(getActivity().getContentResolver().getType(fileUri)),
+                FileUtils.getFile(getActivity(), fileUri));
+        MultipartBody.Part file = MultipartBody.Part.createFormData("photo", new File("filepath").getName(), filePart);
+        // get retrofit instance
+        // call uploadPhoto method from interface FileClient
+        // set parameters descriptionPart and file for the method and check the response on the server
+    }
+
+    private void uploadFiles(Uri fileUriProfile, Uri fileUriPanorama) {
+        //create Retrofit instance
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("baseUrl here")
+                .addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.build();
+
+        //get client and call object for the request
+        FileClient fileClient = retrofit.create(FileClient.class);
+
+        // finally, execute the request
+        Call<ResponseBody> call = fileClient.uploadPhotos(
+                prepareFilePart("profile", fileUriProfile),
+                prepareFilePart("panorama", fileUriPanorama));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void uploadAlbum(List<Uri> fileUris) {
+        String description = "description";
+
+        //create Retrofit instance
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("baseUrl")
+                .addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.build();
+
+        // get client & call object for the request
+        FileClient fileClient = retrofit.create(FileClient.class);
+
+        List<MultipartBody.Part> parts = new ArrayList<>();
+
+        for (int i = 0; i < fileUris.size(); i++) {
+            parts.add(prepareFilePart("" + i, fileUris.get(i)));
+        }
+
+        // finally, execute the request
+        Call<ResponseBody> call = fileClient.uploadAlbum(createPartFromString(description), parts);
+    }
+
+    private void uploadFileWithMultiPartBody(Uri fileUri) {
+        String description = "description";
+        String photographer = "photographer";
+        String year = "year";
+        String location = "location";
+
+        // create Retrofit instance
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("baseUrl")
+                .addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.build();
+
+        // get client & call object for the request
+        FileClient fileClient = retrofit.create(FileClient.class);
+
+        // finally, execute the request
+        Call<ResponseBody> call = fileClient.uploadPhotoWithMultipartBodyPart(createPartFromString(description),
+                createPartFromString(location),
+                createPartFromString(photographer),
+                createPartFromString(year),
+                prepareFilePart("photo", fileUri));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                // Handle response
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle failure
+            }
+        });
+    }
+
+    private void uploadFileWithPartMap(Uri fileUri) {
+        String description = "description";
+        String photographer = "photographer";
+        String year = "year";
+        String location = "location";
+
+        // create Retrofit instance
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl("baseUrl")
+                .addConverterFactory(GsonConverterFactory.create());
+
+        Retrofit retrofit = builder.build();
+
+        // get client & call object for the request
+        FileClient fileClient = retrofit.create(FileClient.class);
+
+        Map<String, RequestBody> partMap = new HashMap<>();
+        partMap.put("client", createPartFromString("android"));
+        partMap.put("secret", createPartFromString("theplaymaker"));
+        if (!TextUtils.isEmpty(description)) {
+            partMap.put("description", createPartFromString(description));
+        }
+        if (!TextUtils.isEmpty(photographer)) {
+            partMap.put("photographer", createPartFromString(photographer));
+        }
+        if (!TextUtils.isEmpty(year)) {
+            partMap.put("year", createPartFromString(year));
+        }
+        if (!TextUtils.isEmpty(location)) {
+            partMap.put("location", createPartFromString(location));
+        }
+        // finally, execute the request
+        Call<ResponseBody> call = fileClient.uploadPhotoWithPartMap(partMap,
+                prepareFilePart("photo", fileUri));
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                // Handle response
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                // Handle failure
+            }
+        });
+    }
+
+    private void downloadFile(String fileUrl) {
+        // Create Retrofit builder
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("baseUrl");
+        // Get Retrofit instance based on builder
+        Retrofit retrofit = builder.build();
+        // Create Retrofit file service
+        FileClient fileDownloadClient = retrofit.create(FileClient.class);
+
+        Call<ResponseBody> call = fileDownloadClient.downloadFileWithDynamicUrlSync(fileUrl);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "server contacted and has file");
+
+                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+
+                    Log.d(TAG, "file download was a success? " + writtenToDisk);
+                } else {
+                    Log.d(TAG, "server contact failed");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "error");
+            }
+        });
+    }
+
+    private boolean writeResponseBodyToDisk(ResponseBody body) {
+        try {
+            // todo change the file location/name according to your needs
+            File file = new File(Arrays.toString(getActivity().getExternalFilesDirs("FileDirectory")) + File.separator + "Future Studio Icon.png");
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+                byte[] fileReader = new byte[4096];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(file);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    Log.d(TAG, "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+
+                return true;
+            } catch (IOException e) {
+                return false;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     /**
